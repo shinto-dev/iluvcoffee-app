@@ -50,3 +50,16 @@ import { ConfigModule } from '@nestjs/config';
 export class AppModule {}
 ```
 Then we can create a .env file in the root of the project. 
+
+## Hashing passwords
+To install the bcrypt module
+```shell
+npm i bcrypt
+npm i @types/bcrypt -D
+```
+
+## Validate and Transform request
+To install the class-validator module
+```shell
+npm i class-validator class-transformer
+```
