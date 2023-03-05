@@ -13,6 +13,7 @@ import { SignInDto } from './dto/sing-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import JwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
+import { ActiveUserData } from '../interfaces/active-user-data.interface';
 
 const errCodePgUniqueViolation = '23505';
 
@@ -26,7 +27,7 @@ export class AuthenticationService {
     private readonly jwtConfig: ConfigType<typeof JwtConfig>,
   ) {}
 
-  async signup(signupDto: SignUpDto) {
+  async signUp(signupDto: SignUpDto) {
     const password = await this.hashingService.hash(signupDto.password);
     const user = {
       ...this.userRepository.create(signupDto),
@@ -43,7 +44,7 @@ export class AuthenticationService {
     }
   }
 
-  async signin(signinDto: SignInDto) {
+  async signIn(signinDto: SignInDto) {
     const user = await this.userRepository.findOne({
       where: { email: signinDto.email },
     });
@@ -64,7 +65,7 @@ export class AuthenticationService {
       {
         sub: user.id, //todo deprecated, find a better way
         email: user.email,
-      },
+      } as ActiveUserData,
       {
         secret: this.jwtConfig.secret,
         issuer: this.jwtConfig.issuer,

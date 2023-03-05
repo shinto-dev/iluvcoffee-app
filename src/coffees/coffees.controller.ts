@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Controller('coffees')
 export class CoffeesController {
@@ -13,7 +23,16 @@ export class CoffeesController {
   }
 
   @Get()
-  findAll() {
+  findAll(@ActiveUser() user: ActiveUserData) {
+    console.log(user);
+    /*
+    findAll(@Req() request: Request) {
+       console.log(request[REQUEST_USER_KEY]);
+    }
+    This is one way to access the user object from the request object. But the decorator approach is
+    more elegant and readable.
+     */
+
     return this.coffeesService.findAll();
   }
 

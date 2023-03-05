@@ -12,13 +12,13 @@ export class AuthenticationController {
 
   @Post('sign-up')
   async signUp(@Body() signupDto: SignUpDto) {
-    return this.authenticationService.signup(signupDto);
+    return this.authenticationService.signUp(signupDto);
   }
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() signinDto: SignInDto) {
-    return this.authenticationService.signin(signinDto);
+    return this.authenticationService.signIn(signinDto);
   }
 
   // example of httpOnly cookie: more safer
