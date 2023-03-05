@@ -30,3 +30,23 @@ UPDATE src/app.module.ts (320 bytes)
 nest g resource users
 ```
 
+## Use config module
+To install the config module
+```shell
+npm i @nestjs/config
+```
+Then we can use the config module in the app.module.ts
+```typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+  ],
+})
+export class AppModule {}
+```
+Then we can create a .env file in the root of the project. 
