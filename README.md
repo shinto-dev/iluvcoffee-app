@@ -1,11 +1,11 @@
 ## Setup
 
-Create project
+**Create project**
 ```shell
 nest new iluvcoffee-app
 ```
 
-Create resource coffees
+**Create resource coffees**
 ```shell
 nest g resource coffees
 ```
@@ -25,3 +25,8 @@ UPDATE package.json (1978 bytes)
 UPDATE src/app.module.ts (320 bytes)
 ✔ Packages installed successfully.
 ```
+**Create resource users**
+```shell
+nest g resource users
+```
+
