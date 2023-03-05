@@ -12,7 +12,23 @@ describe('BcryptService', () => {
     service = module.get<BcryptService>(BcryptService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should hash a password', async () => {
+    const password = 'password';
+    const hashedPassword = await service.hash(password);
+    expect(hashedPassword).not.toBe(password);
+  });
+
+  it('should compare a password', async () => {
+    const password = 'password';
+    const hashedPassword = await service.hash(password);
+    const isPasswordValid = await service.compare(password, hashedPassword);
+    expect(isPasswordValid).toBe(true);
+  });
+
+  it('should compare a password - incorrect', async () => {
+    const password = 'password';
+    const hashedPassword = await service.hash(password);
+    const isPasswordValid = await service.compare('wrong', hashedPassword);
+    expect(isPasswordValid).toBe(false);
   });
 });

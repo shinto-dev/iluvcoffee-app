@@ -63,3 +63,14 @@ To install the class-validator module
 ```shell
 npm i class-validator class-transformer
 ```
+
+## Protecting routes with guard
+
+```shell
+nest g guard iam/authentication/guards/access-token
+```
+
+### Adding public routes
+In any application, there are always certain endpoints that should remain public. Take for example the “signIn” endpoint that lets users log in to the system, unless it’s public, no one would be able to access it and actually “log in”.
+
+
