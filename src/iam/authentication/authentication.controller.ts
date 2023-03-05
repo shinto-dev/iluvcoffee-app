@@ -8,13 +8,28 @@ export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('sign-up')
-  async signup(@Body() signupDto: SignUpDto) {
+  async signUp(@Body() signupDto: SignUpDto) {
     return this.authenticationService.signup(signupDto);
   }
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  async signin(@Body() signinDto: SignInDto) {
+  async signIn(@Body() signinDto: SignInDto) {
     return this.authenticationService.signin(signinDto);
   }
+
+  // example of httpOnly cookie: more safer
+  // @Post('sign-in')
+  // @HttpCode(HttpStatus.OK)
+  // async signin(
+  //   @Res({ passthrough: true }) response,
+  //   @Body() signInDto: SignInDto,
+  // ) {
+  //   const accessToken = await this.authenticationService.signin(signInDto);
+  //   response.cookie('accessToken', accessToken, {
+  //     secure: true,
+  //     httpOnly: true,
+  //     sameSite: true,
+  //   });
+  // }
 }
