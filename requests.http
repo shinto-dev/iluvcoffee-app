@@ -16,8 +16,17 @@ Authorization: Bearer
 	"password": "Password!123"
 }
 
-> {% client.global.set("auth_token", response.body.accessToken); %}
+> {%
+  client.global.set("auth_token", response.body.accessToken);
+  client.global.set("refresh_token", response.body.refreshToken);
+%}
+###
+POST http://localhost:3000/authentication/refresh-token
+Content-Type: application/json
 
+{
+  "refreshToken": "{{refresh_token}}"
+}
 ###
 GET http://localhost:3000/coffees
 Content-Type: application/json
