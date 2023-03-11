@@ -37,3 +37,14 @@ GET http://localhost:3000/coffees
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+###
+POST http://localhost:3000/coffees
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "title": "Test Coffee",
+  "description": "Test Description",
+  "price": 1.99,
+  "flavors": ["chocolate", "vanilla"]
+}
