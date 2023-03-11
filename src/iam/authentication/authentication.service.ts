@@ -15,6 +15,8 @@ import JwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { randomUUID } from 'crypto';
+import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 
 const errCodePgUniqueViolation = '23505';
 
@@ -24,6 +26,7 @@ export class AuthenticationService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly hashingService: HashingService,
     private readonly jwtService: JwtService,
+    private readonly RefreshTokenIdsStorage: RefreshTokenIdsStorage,
     @Inject(JwtConfig.KEY)
     private readonly jwtConfig: ConfigType<typeof JwtConfig>,
   ) {}
@@ -67,13 +70,22 @@ export class AuthenticationService {
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     try {
-      const { sub } = await this.jwtService.verifyAsync<
-        Pick<ActiveUserData, 'sub'>
+      const { sub, refreshTokenId } = await this.jwtService.verifyAsync<
+        Pick<ActiveUserData, 'sub'> & { refreshTokenId: string }
       >(refreshTokenDto.refreshToken, {
         secret: this.jwtConfig.secret,
         issuer: this.jwtConfig.issuer,
         audience: this.jwtConfig.audience,
       });
+
+      const isRefreshTokenExists = await this.RefreshTokenIdsStorage.validate(
+        sub,
+        refreshTokenId,
+      );
+      if (!isRefreshTokenExists) {
+        throw Error('Refresh token is invalid');
+      }
+
       const user = await this.userRepository.findOneByOrFail({ id: sub });
       return await this.generateTokens(user);
     } catch (error) {
@@ -82,6 +94,7 @@ export class AuthenticationService {
   }
 
   private async generateTokens(user: User) {
+    const refreshTokenId = randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       await this.signToken<Partial<ActiveUserData>>(
         user.id,
@@ -90,8 +103,12 @@ export class AuthenticationService {
           email: user.email,
         },
       ),
-      await this.signToken(user.id, this.jwtConfig.refreshTokenTTL),
+      await this.signToken(user.id, this.jwtConfig.refreshTokenTTL, {
+        refreshTokenId,
+      }),
     ]);
+
+    await this.RefreshTokenIdsStorage.insert(user.id, refreshTokenId);
 
     return {
       accessToken,

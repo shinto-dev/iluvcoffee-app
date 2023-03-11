@@ -27,6 +27,11 @@ Content-Type: application/json
 {
   "refreshToken": "{{refresh_token}}"
 }
+
+> {%
+  client.global.set("auth_token", response.body.accessToken);
+  client.global.set("refresh_token", response.body.refreshToken);
+%}
 ###
 GET http://localhost:3000/coffees
 Content-Type: application/json

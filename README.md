@@ -74,3 +74,9 @@ nest g guard iam/authentication/guards/access-token
 In any application, there are always certain endpoints that should remain public. Take for example the “signIn” endpoint that lets users log in to the system, unless it’s public, no one would be able to access it and actually “log in”.
 
 
+## Invalidating tokens
+To install the redis module
+```shell
+npm i ioredis
+npm i @types/redis -D
+```
